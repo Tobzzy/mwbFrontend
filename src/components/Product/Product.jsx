@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 
 import { GET_PRODUCT_BY_ID } from "./Product.gql";
 import { ProductModal } from "../ProductModal";
+import * as Styled from "./Product.styled";
 
 export const Product = ({ id }) => {
   const [productModalVisible, setProductModalVisible] = useState();
@@ -23,12 +24,10 @@ export const Product = ({ id }) => {
           visible={productModalVisible}
         />
       )}
-      <div>
+      <Styled.Product onClick={() => setProductModalVisible(true)}>
         <span>{name}</span>
-        <button onClick={() => setProductModalVisible(true)}>
-          add to cart
-        </button>
-      </div>
+        <span>€{price}</span>
+      </Styled.Product>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 
 import { GET_PRODUCT_BY_ID } from "./ProductModal.gql";
@@ -12,6 +12,8 @@ export const ProductModal = ({ onClose, productId }) => {
     variables: { _id: productId },
   });
 
+  const [count, setCount] = useState(0);
+
   return (
     <Modal onClose={onClose}>
       <Styled.Columns>
@@ -20,8 +22,13 @@ export const ProductModal = ({ onClose, productId }) => {
           <Styled.Description>{description}</Styled.Description>
         </Styled.Column>
         <Styled.Column>
-          <Styled.Price>£{Number(price).toFixed(2)}</Styled.Price>
-          <Styled.Button>Add to cart</Styled.Button>
+          <Styled.Price>€{Number(price).toFixed(2)}</Styled.Price>
+          <Styled.ButtonAdd onClick={() => setCount(count + 1)}>
+            Add to cart
+          </Styled.ButtonAdd>
+          <Styled.ButtonRemove>remove from cart</Styled.ButtonRemove>
+          <p>this item in cart: {count}</p>
+          <Styled.ButtonClose onClick={onClose}>close</Styled.ButtonClose>
         </Styled.Column>
       </Styled.Columns>
     </Modal>
