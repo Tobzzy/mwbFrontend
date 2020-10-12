@@ -41,7 +41,7 @@ export const ButtonRemove = styled.button(() => ({
 
 export const ButtonClose = styled.button(() => ({
   margin: "5px",
-  backgroundColor: "#FF7F7F",
+  backgroundColor: "#68C9E3",
   width: "60px",
   alignSelf: "center",
 }));

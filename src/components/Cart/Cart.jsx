@@ -12,12 +12,7 @@ export const Cart = () => {
     <div>
       <Styled.Cart>Just for Cart - To be continued</Styled.Cart>
       {orderItems.map(({ quantity, product: { name, description, price } }) => (
-        <>
-          {quantity}
-          {name}
-          {description}
-          {price}
-        </>
+        <></>
       ))}
     </div>
   );
