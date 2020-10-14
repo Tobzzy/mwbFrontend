@@ -8,20 +8,23 @@ import { useSubscription, useQuery } from "@apollo/client";
 import { ORDERITEMS_SUBSCRIPTION, GET_ORDER_ITEMS } from "./OrderItemToast.gql";
 
 export const OrderItemToast = () => {
-  const { data: { orderItems: currentOrderItems = [] } = {} } = useQuery(
-    GET_ORDER_ITEMS
-  );
+  const {
+    data: {
+      orderItems: currentOrderItems = [],
+      orderItems: [{ quantity } = {}] = [],
+    } = {},
+  } = useQuery(GET_ORDER_ITEMS);
 
   const { data: { orderItems: newOrderItems = [] } = {} } = useSubscription(
     ORDERITEMS_SUBSCRIPTION
   );
 
   useEffect(() => {
-    console.log("currentOrderItems", currentOrderItems);
-    console.log("newOrderItems", newOrderItems);
     const [updatedOrderItem] = difference(newOrderItems, currentOrderItems);
     if (currentOrderItems.length && newOrderItems.length && updatedOrderItem) {
       toast(updatedOrderItem.product.name);
+      console.log("name", updatedOrderItem.product.name);
+      console.log("quantity", quantity);
     }
   }, [newOrderItems]);
 

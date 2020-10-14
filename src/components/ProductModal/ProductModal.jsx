@@ -20,11 +20,13 @@ export const ProductModal = ({ onClose, productId }) => {
   });
 
   const {
-    data: { orderItems: [{ _id: orderItemId, quantity } = {}] = [] } = {},
+    data: { orderItems: [orderItem = {}] = [] } = {},
   } = useQuery(GET_ORDER_ITEMS_BY_PRODUCT, { variables: { productId } });
 
+  const { _id: orderItemId, quantity } = orderItem;
+
   const [createOrderItem] = useMutation(CREATE_ORDER_ITEM, {
-    update(cache, { data: { createOrderItem } }) {
+    update: (cache, { data: { createOrderItem } }) => {
       cache.modify({
         fields: {
           orderItems(existingOrderItemRefs = []) {
@@ -42,7 +44,19 @@ export const ProductModal = ({ onClose, productId }) => {
 
   const [updateOrderItem] = useMutation(UPDATE_ORDER_ITEM);
 
-  const [deletOrderItem] = useMutation(DELETE_ORDER_ITEM);
+  const [deleteOrderItem] = useMutation(DELETE_ORDER_ITEM, {
+    variables: { _id: orderItemId },
+    update: (cache) => {
+      cache.modify({
+        fields: {
+          orderItems: (existingOrderItems = []) => {
+            const id = cache.identify(orderItem);
+            return existingOrderItems.filter(({ __ref }) => __ref !== id);
+          },
+        },
+      });
+    },
+  });
 
   useEffect(() => {});
   const incrementOrderItem = () => {
@@ -58,14 +72,12 @@ export const ProductModal = ({ onClose, productId }) => {
   };
 
   const decrementOrderItem = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       updateOrderItem({
         variables: { _id: orderItemId, quantity: quantity - 1 },
       });
-    } else if (quantity === 0) {
-      deletOrderItem({
-        variables: { _id: orderItemId },
-      });
+    } else if (quantity === 1) {
+      deleteOrderItem();
     }
   };
 
@@ -93,7 +105,7 @@ export const ProductModal = ({ onClose, productId }) => {
             Add to cart
           </Styled.ButtonAdd>
           <Styled.ButtonRemove
-            disabled={quantity === 0}
+            disabled={!quantity}
             onClick={decrementOrderItem}
           >
             remove from cart

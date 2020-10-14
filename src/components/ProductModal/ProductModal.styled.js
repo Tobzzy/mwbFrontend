@@ -25,18 +25,26 @@ export const Price = styled.span(() => ({
   margin: "10px",
 }));
 
-export const Button = styled.button(() => ({
-  margin: "5px",
-}));
-
 export const ButtonAdd = styled.button(() => ({
   margin: "5px",
   backgroundColor: "#b8eeb6",
+  border: "none",
+  height: "30px",
+  outline: "none",
+  cursor: "pointer",
+  "@media (hover: hover) and (pointer: fine)": {
+    ":hover": {
+      backgroundColor: "hsl(84, 74%, 84%)",
+    },
+  },
 }));
 
 export const ButtonRemove = styled.button(() => ({
   margin: "5px",
   backgroundColor: "#dce186",
+  border: "none",
+  height: "30px",
+  outline: "none",
 }));
 
 export const ButtonClose = styled.button(() => ({
@@ -44,4 +52,7 @@ export const ButtonClose = styled.button(() => ({
   backgroundColor: "#68C9E3",
   width: "60px",
   alignSelf: "center",
+  border: "none",
+  height: "30px",
+  outline: "none",
 }));
