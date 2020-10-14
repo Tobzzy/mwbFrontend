@@ -1,16 +1,12 @@
 import { gql } from "@apollo/client";
 
+import { OrderItem } from "../../fragments/";
+
 export const GET_ORDER_ITEMS = gql`
   query {
     orderItems {
-      quantity
-      product {
-        _id
-        name
-        description
-        price
-        inStock
-      }
+      ...OrderItem
     }
   }
+  ${OrderItem}
 `;

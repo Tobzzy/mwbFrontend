@@ -4,19 +4,20 @@ import * as Styled from "./App.styled";
 import { mdiCoffee, mdiCardsHeart, mdiCodeJson } from "@mdi/js";
 import Icon from "@mdi/react";
 
-import { Cart } from "../Cart";
+import { Header } from "../Header";
 import { Products } from "../Products";
+import { OrderItemToast } from "../OrderItemToast";
 
 export const App = () => {
   return (
     <>
       <Styled.Global />
       <Styled.Main>
-        <h1>Welcome to my Online Shopping Website</h1>
         <Styled.Content>
           <Route exact path="/">
-            <Cart />
+            <Header />
             <Products />
+            <OrderItemToast />
           </Route>
         </Styled.Content>
         <Styled.Link>

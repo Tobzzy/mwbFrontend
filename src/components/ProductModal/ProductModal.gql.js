@@ -37,3 +37,13 @@ export const UPDATE_ORDER_ITEM = gql`
   }
   ${OrderItem}
 `;
+
+export const DELETE_ORDER_ITEM = gql`
+  mutation DeleteOrderItem($_id: ID!) {
+    deleteOrderItem(_id: $_id) {
+      response
+    }
+  }
+`;
+
+

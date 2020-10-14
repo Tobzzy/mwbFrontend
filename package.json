@@ -3,19 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.2.2",
+    "@apollo/client": "^3.2.4",
     "@mdi/js": "^5.6.55",
     "@mdi/react": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "graphql": "^15.3.0",
+    "lodash": "^4.17.20",
+    "lodash.difference": "^4.5.0",
     "react": "^16.13.1",
     "react-apollo": "^3.1.5",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "styled-components": "^5.2.0"
+    "react-toastify": "^6.0.9",
+    "styled-components": "^5.2.0",
+    "subscriptions-transport-ws": "^0.9.18"
   },
   "scripts": {
     "dev": "react-scripts start",

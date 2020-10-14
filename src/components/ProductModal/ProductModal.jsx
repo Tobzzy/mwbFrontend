@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+import { OrderItem } from "../../fragments";
 
 import {
   GET_PRODUCT_BY_ID,
   CREATE_ORDER_ITEM,
   GET_ORDER_ITEMS_BY_PRODUCT,
   UPDATE_ORDER_ITEM,
+  DELETE_ORDER_ITEM,
 } from "./ProductModal.gql";
 import * as Styled from "./ProductModal.styled";
 import { Modal } from "../Modal";
@@ -21,12 +23,28 @@ export const ProductModal = ({ onClose, productId }) => {
     data: { orderItems: [{ _id: orderItemId, quantity } = {}] = [] } = {},
   } = useQuery(GET_ORDER_ITEMS_BY_PRODUCT, { variables: { productId } });
 
-  const [createOrderItem] = useMutation(CREATE_ORDER_ITEM);
-
-  const [updateOrderItem] = useMutation(UPDATE_ORDER_ITEM, {
-    refetchQueries: GET_ORDER_ITEMS_BY_PRODUCT,
+  const [createOrderItem] = useMutation(CREATE_ORDER_ITEM, {
+    update(cache, { data: { createOrderItem } }) {
+      cache.modify({
+        fields: {
+          orderItems(existingOrderItemRefs = []) {
+            const newOrderItemRef = cache.writeFragment({
+              data: createOrderItem,
+              fragment: OrderItem,
+              fragmentName: "OrderItem",
+            });
+            return [...existingOrderItemRefs, newOrderItemRef];
+          },
+        },
+      });
+    },
   });
 
+  const [updateOrderItem] = useMutation(UPDATE_ORDER_ITEM);
+
+  const [deletOrderItem] = useMutation(DELETE_ORDER_ITEM);
+
+  useEffect(() => {});
   const incrementOrderItem = () => {
     if (orderItemId) {
       updateOrderItem({
@@ -45,10 +63,19 @@ export const ProductModal = ({ onClose, productId }) => {
         variables: { _id: orderItemId, quantity: quantity - 1 },
       });
     } else if (quantity === 0) {
-      // deleteOrderItem
+      deletOrderItem({
+        variables: { _id: orderItemId },
+      });
     }
   };
 
+  const availability = () => {
+    if (quantity != null) {
+      return inStock - quantity;
+    } else {
+      return inStock;
+    }
+  };
   return (
     <Modal onClose={onClose}>
       <Styled.Columns>
@@ -58,14 +85,17 @@ export const ProductModal = ({ onClose, productId }) => {
         </Styled.Column>
         <Styled.Column>
           <Styled.Price>€{Number(price).toFixed(2)}</Styled.Price>
-          <Styled.Price>Availability: {inStock - quantity}</Styled.Price>
+          <Styled.Price>Availability: {availability()}</Styled.Price>
           <Styled.ButtonAdd
             disabled={inStock <= quantity}
             onClick={incrementOrderItem}
           >
             Add to cart
           </Styled.ButtonAdd>
-          <Styled.ButtonRemove onClick={decrementOrderItem}>
+          <Styled.ButtonRemove
+            disabled={quantity === 0}
+            onClick={decrementOrderItem}
+          >
             remove from cart
           </Styled.ButtonRemove>
           <p>this item in cart: {quantity}</p>
