@@ -11,10 +11,9 @@ export const Header = () => {
   const quantity = orderItems.length;
 
   return (
-    <div>
-      <Styled.Main>Welcome to my Online Shopping Website</Styled.Main>
-      <Styled.Cart>Test Application:</Styled.Cart>
-      <Styled.Cart>Total in cart: {quantity}</Styled.Cart>
-    </div>
+    <Styled.Header>
+      <h1>Test Application</h1>
+      <Styled.Cart>Total in cart(s): {quantity}</Styled.Cart>
+    </Styled.Header>
   );
 };
