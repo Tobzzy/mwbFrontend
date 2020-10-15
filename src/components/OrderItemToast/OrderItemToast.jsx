@@ -1,32 +1,34 @@
-import React, { useEffect } from "react";
-import difference from "lodash.difference";
+import React from "react";
+import { useSubscription, useQuery } from "@apollo/client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useSubscription, useQuery } from "@apollo/client";
-
-import { ORDERITEMS_SUBSCRIPTION, GET_ORDER_ITEMS } from "./OrderItemToast.gql";
+import {
+  GET_PRODUCTS_QUERY,
+  PRODUCTS_SUBSCRIPTION,
+} from "./OrderItemToast.gql";
 
 export const OrderItemToast = () => {
-  const {
-    data: {
-      orderItems: currentOrderItems = [],
-      orderItems: [{ quantity } = {}] = [],
-    } = {},
-  } = useQuery(GET_ORDER_ITEMS);
+  const { data: { products = [] } = {} } = useQuery(GET_PRODUCTS_QUERY);
 
-  const { data: { orderItems: newOrderItems = [] } = {} } = useSubscription(
-    ORDERITEMS_SUBSCRIPTION
-  );
-
-  useEffect(() => {
-    const [updatedOrderItem] = difference(newOrderItems, currentOrderItems);
-    if (currentOrderItems.length && newOrderItems.length && updatedOrderItem) {
-      toast(updatedOrderItem.product.name);
-      console.log("name", updatedOrderItem.product.name);
-      console.log("quantity", quantity);
-    }
-  }, [newOrderItems]);
+  useSubscription(PRODUCTS_SUBSCRIPTION, {
+    onSubscriptionData: ({
+      subscriptionData: {
+        data: {
+          products: [{ _id: newProductId, inStock: newInStock, name }],
+        },
+      },
+    }) => {
+      const { inStock: currInStock } = products.find(
+        ({ _id }) => _id === newProductId
+      );
+      toast(
+        currInStock - newInStock === 1
+          ? `${name} quantity decreased by 1`
+          : `${name} quantity increased by 1`
+      );
+    },
+  });
 
   return <ToastContainer />;
 };

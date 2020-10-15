@@ -31,6 +31,8 @@ export const AddProduct = ({ onClose }) => {
     },
   });
 
+  /** @todo this form would ideally have validation */
+
   return (
     <Modal onClose={onClose}>
       <Styled.Main>

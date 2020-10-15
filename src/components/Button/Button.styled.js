@@ -1,16 +1,24 @@
 import styled from "styled-components";
+import { darken, readableColor } from "polished";
 
-export const Button = styled.button({
-  backgroundColor: "#cce8d3",
+export const Button = styled.button(({ backgroundColor, disabled }) => ({
+  backgroundColor,
+  color: readableColor(backgroundColor),
+  cursor: disabled ? "default" : "pointer",
   lineHeight: "2rem",
   borderRadius: "false",
+  opacity: disabled ? 0.5 : 1,
   outline: "none",
   border: "none",
   height: "30px",
-  cursor: "pointer",
   "@media (hover: hover) and (pointer: fine)": {
     ":hover": {
-      backgroundColor: "hsl(84, 74%, 84%)",
+      backgroundColor: disabled
+        ? backgroundColor
+        : darken(0.1, backgroundColor),
+      color: disabled
+        ? readableColor(backgroundColor)
+        : readableColor(darken(0.1, backgroundColor)),
     },
   },
-});
+}));

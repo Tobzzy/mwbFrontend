@@ -13,12 +13,12 @@ export const App = () => {
     <>
       <Styled.Global />
       <Styled.App>
+        <OrderItemToast />
         <Header />
         <Styled.Main>
           <Styled.Content>
             <Route exact path="/">
               <Products />
-              <OrderItemToast />
             </Route>
             <ButtonAddProduct />
           </Styled.Content>

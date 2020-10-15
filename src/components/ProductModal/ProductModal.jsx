@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { OrderItem } from "../../fragments";
+import { OrderItem, Product } from "../../fragments";
 
 import {
   GET_PRODUCT_BY_ID,
@@ -10,11 +10,12 @@ import {
   DELETE_ORDER_ITEM,
 } from "./ProductModal.gql";
 import * as Styled from "./ProductModal.styled";
+import { Button } from "../Button";
 import { Modal } from "../Modal";
 
 export const ProductModal = ({ onClose, productId }) => {
   const {
-    data: { product: { description, name, price, inStock } = {} } = {},
+    data: { product, product: { description, name, price, inStock } = {} } = {},
   } = useQuery(GET_PRODUCT_BY_ID, {
     variables: { _id: productId },
   });
@@ -23,7 +24,7 @@ export const ProductModal = ({ onClose, productId }) => {
     data: { orderItems: [orderItem = {}] = [] } = {},
   } = useQuery(GET_ORDER_ITEMS_BY_PRODUCT, { variables: { productId } });
 
-  const { _id: orderItemId, quantity } = orderItem;
+  const { _id: orderItemId, quantity: currentQuantity } = orderItem;
 
   const [createOrderItem] = useMutation(CREATE_ORDER_ITEM, {
     update: (cache, { data: { createOrderItem } }) => {
@@ -42,7 +43,24 @@ export const ProductModal = ({ onClose, productId }) => {
     },
   });
 
-  const [updateOrderItem] = useMutation(UPDATE_ORDER_ITEM);
+  const [updateOrderItem] = useMutation(UPDATE_ORDER_ITEM, {
+    update: (
+      cache,
+      {
+        data: {
+          updateOrderItem: { quantity: newQuantity },
+        },
+      }
+    ) => {
+      const id = cache.identify(product);
+      const quantityDiff = currentQuantity - newQuantity;
+      cache.writeFragment({
+        id,
+        data: { ...product, inStock: inStock + quantityDiff },
+        fragment: Product,
+      });
+    },
+  });
 
   const [deleteOrderItem] = useMutation(DELETE_ORDER_ITEM, {
     variables: { _id: orderItemId },
@@ -55,6 +73,12 @@ export const ProductModal = ({ onClose, productId }) => {
           },
         },
       });
+      const id = cache.identify(product);
+      cache.writeFragment({
+        id,
+        data: { ...product, inStock: inStock + 1 },
+        fragment: Product,
+      });
     },
   });
 
@@ -62,7 +86,7 @@ export const ProductModal = ({ onClose, productId }) => {
   const incrementOrderItem = () => {
     if (orderItemId) {
       updateOrderItem({
-        variables: { _id: orderItemId, quantity: quantity + 1 },
+        variables: { _id: orderItemId, quantity: currentQuantity + 1 },
       });
     } else {
       createOrderItem({
@@ -72,22 +96,15 @@ export const ProductModal = ({ onClose, productId }) => {
   };
 
   const decrementOrderItem = () => {
-    if (quantity > 1) {
+    if (currentQuantity > 1) {
       updateOrderItem({
-        variables: { _id: orderItemId, quantity: quantity - 1 },
+        variables: { _id: orderItemId, quantity: currentQuantity - 1 },
       });
-    } else if (quantity === 1) {
+    } else if (currentQuantity === 1) {
       deleteOrderItem();
     }
   };
 
-  const availability = () => {
-    if (quantity != null) {
-      return inStock - quantity;
-    } else {
-      return inStock;
-    }
-  };
   return (
     <Modal onClose={onClose}>
       <Styled.Columns>
@@ -97,20 +114,22 @@ export const ProductModal = ({ onClose, productId }) => {
         </Styled.Column>
         <Styled.Column>
           <Styled.Price>€{Number(price).toFixed(2)}</Styled.Price>
-          <Styled.Price>Availability: {availability()}</Styled.Price>
-          <Styled.ButtonAdd
-            disabled={inStock <= quantity}
+          <Styled.Price>Availability: {inStock}</Styled.Price>
+          <Button
+            backgroundColor="limegreen"
+            disabled={!inStock}
             onClick={incrementOrderItem}
           >
             Add to cart
-          </Styled.ButtonAdd>
-          <Styled.ButtonRemove
-            disabled={!quantity}
+          </Button>
+          <Button
+            backgroundColor="crimson"
+            disabled={!currentQuantity}
             onClick={decrementOrderItem}
           >
             remove from cart
-          </Styled.ButtonRemove>
-          <p>this item in cart: {quantity}</p>
+          </Button>
+          <p>this item in cart: {currentQuantity}</p>
           <Styled.ButtonClose onClick={onClose}>close</Styled.ButtonClose>
         </Styled.Column>
       </Styled.Columns>

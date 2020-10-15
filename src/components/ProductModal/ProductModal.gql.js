@@ -22,7 +22,7 @@ export const GET_ORDER_ITEMS_BY_PRODUCT = gql`
 
 export const CREATE_ORDER_ITEM = gql`
   mutation CreateOrderItem($productId: ID!, $quantity: Int!) {
-    createOrderItem(data: { quantity: $quantity, productId: $productId }) {
+    createOrderItem(data: { productId: $productId, quantity: $quantity }) {
       ...OrderItem
     }
   }
@@ -45,5 +45,3 @@ export const DELETE_ORDER_ITEM = gql`
     }
   }
 `;
-
-

@@ -1,21 +1,21 @@
 import { gql } from "@apollo/client";
 
-import { OrderItem } from "../../fragments";
+import { Product } from "../../fragments";
 
-export const ORDERITEMS_SUBSCRIPTION = gql`
-  subscription SubcriptionGetOrderItems {
-    orderItems {
-      ...OrderItem
+export const GET_PRODUCTS_QUERY = gql`
+  query OrderItemToastGetProducts {
+    products {
+      ...Product
     }
   }
-  ${OrderItem}
+  ${Product}
 `;
 
-export const GET_ORDER_ITEMS = gql`
-  query {
-    orderItems {
-      ...OrderItem
+export const PRODUCTS_SUBSCRIPTION = gql`
+  subscription SubcriptionGetProducts {
+    products {
+      ...Product
     }
   }
-  ${OrderItem}
+  ${Product}
 `;
