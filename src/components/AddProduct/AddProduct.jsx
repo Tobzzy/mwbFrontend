@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 
 import { CREATE_PRODUCT } from "./AddProduct.gql";
@@ -9,7 +8,6 @@ import { Modal } from "../Modal";
 import { Button } from "../Button";
 
 export const AddProduct = ({ onClose }) => {
-  const { push } = useHistory();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -47,43 +45,58 @@ export const AddProduct = ({ onClose }) => {
                 inStock,
               },
             });
-            push("/");
+            onClose();
           }}
         >
           <h3>Add new product</h3>
-          <div>
-            <label>Product Name: </label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required=""
-            ></input>
-          </div>
-          <div>
-            <label>Product Description: </label>
-            <input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required=""
-            ></input>
-          </div>
-          <div>
-            <label>Product Price: </label>
-            <input
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              required=""
-            ></input>
-          </div>
-          <div>
-            <label>Product InStock: </label>
-            <input
-              value={inStock}
-              onChange={(e) => setInStock(Number(e.target.value))}
-              required=""
-            ></input>
-          </div>
-          <Button type="submit">Submit</Button>
+          <Styled.Column>
+            <label>Name: </label>
+            <Styled.Input>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              ></input>
+            </Styled.Input>
+          </Styled.Column>
+          <Styled.Column>
+            <label>Description: </label>
+            <Styled.TextArea>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              ></textarea>
+            </Styled.TextArea>
+          </Styled.Column>
+          <Styled.Column>
+            <label>Price: </label>
+            <Styled.Input>
+              <input
+                value={price}
+                type="number"
+                step="0.01"
+                min="0.01"
+                onChange={(e) => setPrice(Number(e.target.value))}
+                required
+              ></input>
+            </Styled.Input>
+          </Styled.Column>
+          <Styled.Column>
+            <label>Quantity InStock: </label>
+            <Styled.Input>
+              <input
+                value={inStock}
+                type="number"
+                min="1"
+                onChange={(e) => setInStock(Number(e.target.value))}
+                required
+              ></input>
+            </Styled.Input>
+          </Styled.Column>
+          <Button backgroundColor="#91c9a8" type="submit">
+            Submit
+          </Button>
         </form>
       </Styled.Main>
     </Modal>

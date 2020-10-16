@@ -1,6 +1,9 @@
 import styled, { createGlobalStyle } from "styled-components";
 
 export const Global = createGlobalStyle(() => ({
+  "*": {
+    boxSizing: "border-box",
+  },
   body: {
     fontFamily: "sans-serif",
     margin: "0",

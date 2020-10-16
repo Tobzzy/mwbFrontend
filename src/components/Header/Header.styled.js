@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
 export const Header = styled.title(() => ({
-  padding: "1rem",
   display: "flex",
   justifyContent: "space-between",
   width: "100%",
   backgroundColor: "#cce8d3",
-  height: "40px",
+  height: "64px",
   alignItems: "center",
 }));
 

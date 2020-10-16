@@ -24,13 +24,3 @@ export const Description = styled.span(() => ({
 export const Price = styled.span(() => ({
   margin: "10px",
 }));
-
-export const ButtonClose = styled.button(() => ({
-  margin: "5px",
-  backgroundColor: "#68C9E3",
-  width: "60px",
-  alignSelf: "center",
-  border: "none",
-  height: "30px",
-  outline: "none",
-}));

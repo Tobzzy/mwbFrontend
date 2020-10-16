@@ -8,6 +8,7 @@ export const Button = styled.button(({ backgroundColor, disabled }) => ({
   lineHeight: "2rem",
   borderRadius: "false",
   opacity: disabled ? 0.5 : 1,
+  marginTop: "0.5rem",
   outline: "none",
   border: "none",
   height: "30px",

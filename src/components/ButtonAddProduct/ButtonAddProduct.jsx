@@ -14,7 +14,12 @@ export const ButtonAddProduct = () => {
           visible={addProductVisible}
         />
       )}
-      <Button onClick={() => setAddProductVisible(true)}>Add Product</Button>
+      <Button
+        backgroundColor="#91c9a8"
+        onClick={() => setAddProductVisible(true)}
+      >
+        Add Product
+      </Button>
     </Styled.Main>
   );
 };

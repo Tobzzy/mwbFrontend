@@ -130,7 +130,9 @@ export const ProductModal = ({ onClose, productId }) => {
             remove from cart
           </Button>
           <p>this item in cart: {currentQuantity}</p>
-          <Styled.ButtonClose onClick={onClose}>close</Styled.ButtonClose>
+          <Button backgroundColor="#498bf5" onClick={onClose}>
+            close
+          </Button>
         </Styled.Column>
       </Styled.Columns>
     </Modal>
